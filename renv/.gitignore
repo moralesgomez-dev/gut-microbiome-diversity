@@ -1,24 +1,7 @@
-# R
-.Rhistory
-.Rapp.history
-.RData
-.Rproj.user/
-.Ruserdata
-
-# renv 
-renv/library/
-renv/local/
-renv/cellar/
-renv/lock/
-renv/python/
-renv/sandbox/
-renv/staging/
-
-# Datos
-data/*
-!data/.gitkeep
-
-# Editor y sistema
-.vscode/
-Thumbs.db
-desktop.ini
+library/
+local/
+cellar/
+lock/
+python/
+sandbox/
+staging/
