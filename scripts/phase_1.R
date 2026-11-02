@@ -23,7 +23,6 @@ ntaxa(enterotype)
 # sample_names() devuelve los nombres de las muestras
 sample_names(OTU1)
 sample_names(sample1)
-sample_names(TAX1) # No tiene sentido, ya que tax_table no tiene muestras, sino taxones. Por lo tanto, no tiene sample_names.
 sample_names(enterotype)
 
 # sample_variables() devuelve los nombres de las variables de metadatos
