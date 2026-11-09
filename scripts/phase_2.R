@@ -79,6 +79,8 @@ min(sample_sums(ps_cl))
 ps_cl <- transform_sample_counts(ps_cl, function(x) x / sum(x))
 summary(sample_sums(ps_cl)) 
 
+saveRDS(ps_cl, "data/ps_cl.rds")
+
 # Calculamos el top 10 con el ps clasificado. De esta manera el ranking no esta sesgado hacia las muestras de pyro
 top10 <- names(sort(taxa_sums(ps_cl), decreasing = TRUE))[1:10]
 
@@ -105,7 +107,10 @@ aggregate(Abundance ~ Enterotype + SeqTech, data = res, FUN = sum)   # deben dar
 # Fijamos el orden de las categorias
 res$Categoria <- factor(res$Categoria, levels = c(top10, "Otros"))
 
-ggplot(res, aes(x = Enterotype, y = Abundance, fill = Categoria)) +
+grafico_composicion <- ggplot(
+  res,
+  aes(x = Enterotype, y = Abundance, fill = Categoria)
+) +
   geom_col() +
   facet_wrap(~ SeqTech) +
   labs(x = "Enterotipo", y = "Abundancia relativa media (sobre lo clasificado)")
@@ -175,63 +180,6 @@ div_sensibilidad$SeqTech <- meta_sens[
   "SeqTech"
 ]
 
-# Kruskal-Wallis: compara enterotipos dentro de cada tecnologia.
-# Se ajustan los p-valores de Shannon y Simpson por separado con Holm.
-probar_enterotipos <- function(datos, nombre_analisis) {
-  indices <- c("Shannon", "Simpson")
-  tecnologias <- unique(as.character(na.omit(datos$SeqTech)))
-
-  resultados <- do.call(rbind, lapply(indices, function(indice) {
-    do.call(rbind, lapply(tecnologias, function(tecnologia) {
-      grupo <- datos[
-        !is.na(datos$Enterotype) &
-          !is.na(datos$SeqTech) &
-          datos$SeqTech == tecnologia,
-        ,
-        drop = FALSE
-      ]
-      grupo$Enterotype <- droplevels(factor(grupo$Enterotype))
-
-      if (nlevels(grupo$Enterotype) < 2) {
-        return(data.frame(
-          Analisis = nombre_analisis,
-          Indice = indice,
-          SeqTech = tecnologia,
-          n = nrow(grupo),
-          estadistico = NA_real_,
-          p_valor = NA_real_
-        ))
-      }
-
-      prueba <- kruskal.test(grupo[[indice]] ~ grupo$Enterotype)
-      data.frame(
-        Analisis = nombre_analisis,
-        Indice = indice,
-        SeqTech = tecnologia,
-        n = nrow(grupo),
-        estadistico = unname(prueba$statistic),
-        p_valor = prueba$p.value
-      )
-    }))
-  }))
-
-  resultados$p_ajustado <- ave(
-    resultados$p_valor,
-    resultados$Indice,
-    FUN = function(p) p.adjust(p, method = "holm")
-  )
-  resultados
-}
-
-pruebas_div_cl <- probar_enterotipos(div_cl, "Generos clasificados")
-pruebas_div_sensibilidad <- probar_enterotipos(
-  div_sensibilidad,
-  "Incluyendo taxon -1"
-)
-
-pruebas_diversidad <- rbind(pruebas_div_cl, pruebas_div_sensibilidad)
-pruebas_diversidad
-
 # Boxplots por enterotipo, separados por tecnología de secuenciación
 box_shannon_cl <- ggplot(
   div_cl,
@@ -293,3 +241,15 @@ box_shannon_cl
 box_simpson_cl
 box_shannon_sens
 box_simpson_sens
+
+dir.create("results/figures", recursive = TRUE, showWarnings = FALSE)
+ggsave("results/figures/phase_2_composicion_generos.png",
+       grafico_composicion, width = 10, height = 6, dpi = 300)
+ggsave("results/figures/phase_2_shannon_generos_clasificados.png",
+       box_shannon_cl, width = 10, height = 6, dpi = 300)
+ggsave("results/figures/phase_2_simpson_generos_clasificados.png",
+       box_simpson_cl, width = 10, height = 6, dpi = 300)
+ggsave("results/figures/phase_2_shannon_incluye_taxon_menos_1.png",
+       box_shannon_sens, width = 10, height = 6, dpi = 300)
+ggsave("results/figures/phase_2_simpson_incluye_taxon_menos_1.png",
+       box_simpson_sens, width = 10, height = 6, dpi = 300)

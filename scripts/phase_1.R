@@ -11,12 +11,10 @@ TAX1 <- tax_table(enterotype)
 # nsamples() devuelve el numero de muestras
 nsamples(OTU1)
 nsamples(sample1)
-nsamples(TAX1) # No tiene sentido, ya que tax_table no tiene muestras, sino taxones. Por lo tanto, no tiene nsamples.
 nsamples(enterotype)
 
 # ntaxa() devuelve el numero de taxones
 ntaxa(OTU1)
-ntaxa(sample1) # No tiene sentido, ya que sample_data no tiene taxones, sino muestras. Por lo tanto, no tiene ntaxa.
 ntaxa(TAX1)
 ntaxa(enterotype)
 
@@ -26,9 +24,7 @@ sample_names(sample1)
 sample_names(enterotype)
 
 # sample_variables() devuelve los nombres de las variables de metadatos
-sample_variables(OTU1) # No tiene sentido, ya que otu_table no tiene variables de metadatos, sino OTUs. Por lo tanto, no tiene sample_variables.
 sample_variables(sample1)
-sample_variables(TAX1) # No tiene sentido, ya que tax_table no tiene variables de metadatos, sino taxones. Por lo tanto, no tiene sample_variables.
 sample_variables(enterotype)
 
 # Comprobamos cuantos NA hay en los metadatos
