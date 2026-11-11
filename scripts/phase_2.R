@@ -1,9 +1,4 @@
 # Fase 2 — Composición y diversidad alfa
-# Como el dataset solo tiene el rango género, quédate con los géneros más abundantes (taxa_sums y prune_taxa) # nolint
-# y dibuja barras apiladas con plot_bar o con ggplot2 sobre psmelt; los datos ya son proporciones. # nolint: line_length_linter.
-# Calcula la diversidad alfa con estimate_richness y entiende qué mide cada índice: riqueza frente a equitatividad. # nolint
-# Chao1 y ACE necesitan conteos crudos, así que aquí no aplican: céntrate en Shannon y Simpson. # nolint
-# Compara grupos de una variable de metadatos con wilcox.test o kruskal.test y muéstralo con boxplots. # nolint
 
 # Cargamos las librerias del setup
 source("scripts/00_setup.R")

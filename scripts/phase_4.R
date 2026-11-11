@@ -45,4 +45,12 @@ round(prop.table(tab_seqtech, 1), 2)
 
 # Coloreamos el PCoA por cluster
 sample_data(ps_cl)$cluster <- factor(cl[sample_names(ps_cl)])
-plot_ordination(ps_cl, ordination = ordination, color = "cluster")
+grafico_pcoa_clustering <- plot_ordination(ps_cl, ordination = ordination, color = "cluster")
+ggsave("results/figures/phase_4_pcoa_clustering.png",
+       grafico_pcoa_clustering, width = 8, height = 6, dpi = 300)
+
+# Vemos que hay cierta correspondencia entre cluster y enterotupos, sobre todo para cl3 y ent2, pero no hay una separacion uno-uno clara
+# Segun Seqtech, wel cluster 2 si es claramente dominante la tec Pyro, pero los cl1 y 3 estan repartidos
+# Esto puede sugerir que el cl basado en bray curtis capta la tecnologia de sencuenciacion.
+
+# Por tanto, los clusters no reproducen limpiamnte los enterotipos y parecen estar influidos por la tecnologia. Igualmente esto no prueba por si solo que las asociaciones sean significativas.
